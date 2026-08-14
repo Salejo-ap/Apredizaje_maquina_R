@@ -68,7 +68,8 @@ set.seed(920203) #se deja alguna semilla para que el muestreo sea replicable
 sample <- sample.int(nrow(regtecnica), floor(.8*nrow(regtecnica)))
 regtecnica.train <- regtecnica[sample, ]
 regtecnica.test <- regtecnica[-sample, ]
-
+# se hace train y test para evitar el overfiting, evitando que el modelo se ajuste a los datos de
+# la base de datos.
 """##**Aproximación estadística clásica**
 
 Vamos a crear dos modelos lineales clásicos. En ellos, las variables independientes se definen de antemano, es decir, son preespecificadas.
@@ -77,7 +78,7 @@ Vamos a crear dos modelos lineales clásicos. En ellos, las variables independie
 
 Primero vamos a observar la correlación entre los datos
 """
-
+# Saber lo que esta pasando en mis ndatos 
 matrizcor<-cor(regtecnica.train)
 corrplot(matrizcor)
 
