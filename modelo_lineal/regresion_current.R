@@ -196,7 +196,7 @@ confint(modelo0, level=0.95)
 
 #Primero, presentaremos 4 gráficos de diagnóstico de residuos:
 
-#layout(matrix(c(1,2,3,4),2,2)) # opcional 4 graficos/pagina
+layout(matrix(c(1,2,3,4),2,2)) # opcional 4 graficos/pagina
 plot(modelo0)
 
 #El primer y tercer gráfico muestran las predicciones en el eje x contra los residuos (simples en el primer gráfico
@@ -212,10 +212,14 @@ plot(modelo0)
 #particularmente cuando hablamos de residuos positivos altos (parte derecha/arriba de la gráfica) entonces muy 
 #probablemente nuestor modelo no cumpla el supuesto de normalidad.
 
-#Por último, el cuarto gráfico chequea la presencia de puntos de influencia, casos que cambian significativamente el resultado de la regresión. Valores más allá de la curva roja (largas distancias de Cook) serían puntos de influencia que invitan a obtener más casos de combinaciones cercanas de variables dependientes para saber si el modelo actual es válido como está o simplemente se ve influenciado y dominado por esos puntos en regiones “escasas” de puntos. No parece ser el caso para nuestro modelo básico.
+#Por último, el cuarto gráfico chequea la presencia de puntos de influencia, casos que cambian significativamente el 
+#resultado de la regresión. Valores más allá de la curva roja (largas distancias de Cook) serían puntos de influencia 
+#que invitan a obtener más casos de combinaciones cercanas de variables dependientes para saber si el modelo actual es 
+#válido como está o simplemente se ve influenciado y dominado por esos puntos en regiones “escasas” de puntos. 
+#No parece ser el caso para nuestro modelo básico.
 
 #Por último, chequeemos la autocorrelación de residuos:
-"""
+
 
 dwtest(modelo0)
 
