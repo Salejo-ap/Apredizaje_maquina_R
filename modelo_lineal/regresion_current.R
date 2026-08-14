@@ -30,8 +30,8 @@ library(MASS)
 library(leaps)
 
 """*Veamos el archivo:*"""
-
-regtecnica<-read.csv("regtecnica.csv", header=TRUE, sep=";", dec=",")
+path<-"C:\\Users\\glopa\\Desktop\\Apredizaje_maquina_R\\modelo_lineal\\regtecnica.csv"
+regtecnica<-read.csv(path, header=TRUE, sep=";", dec=",")
 
 str(regtecnica)
 
@@ -106,7 +106,7 @@ Una vez obtenidos los modelos se pasa a revisar sus métricas de ajuste (calidad
 summary(modelo0)
 
 summary(modelo1)
-
+#modelando el ruido y perdiendo robustez
 """En este resumen, se observan las primeras y más básicas evaluaciones del modelo de regresión. Tenemos dos pruebas de hipótesis y dos métricas de ajuste.
 
 Miremos primero la prueba de hipótesis F (F statistics). Se trata de una prueba básica en la que, si la regresión explica un poco más que el error (el modelo explica más que el azar), el valor p será pequeño. A menos que las variables independientes tengan muy baja asociación con la dependiente, esta prueba se verificará y nos dirá que el modelo tiene un mínimo nivel de validez predictiva.
@@ -189,6 +189,7 @@ Veamos como funciona eso en los modelos que ya hemos creado.
 """
 
 #obteniendo el AIC
+## es una metrica de información que penaliza el número de variables, mientras menor sea el AIC, mejor es el modelo
 AIC_full<-AIC(modelo0)
 AIC_manual<-AIC(modelo1)
 AIC_compara<-as.data.frame(rbind(AIC_full,AIC_manual))
@@ -239,6 +240,7 @@ Para poder ejecutarlo en R, es necesario haber creado primero el modelo completo
 #Feature selection
 ##stepwise
 modelostep<- step(modelo1,direction="both")
+#evalua el modelo quitando las variables que no aportan al modelo, y agregando las que si aportan, de acuerdo a la reducción del AIC
 
 summary(modelostep)
 
