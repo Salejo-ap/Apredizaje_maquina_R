@@ -52,7 +52,8 @@ datos_entrenamiento.test <- datos_entrenamiento[-sample, ]
 #-----------------------------------------------------------------------------------------------------------------
 ###Analisis de correlacion entre las variables del conjunto de entrenamiento
 matrizcor<-cor(datos_entrenamiento.train)
-corrplot(matrizcor)
+plot_corr <- corrplot(matrizcor)
+
 #-----------------------------------------------------------------------------------------------------------------
 ##modelado y valoracion del modelo
 #-----------------------------------------------------------------------------------------------------------------
@@ -77,12 +78,30 @@ dwtest(modelo)
 #-----------------------------------------------------------------------------------------------------------------
 ##feauture selection y overfitting
 #-----------------------------------------------------------------------------------------------------------------
-### AIC
+### AIC modelo inicial
 AIC<-AIC(modelo)
 AIC
 
-### predicciones
+### predicciones modelo inicial
 
 pred<-predict(modelo, datos_entrenamiento.test, se.fit=TRUE)
 RMSE<-sqrt(mean((pred$fit-datos_entrenamiento.test$Feelslike_C)^2))
 RMSE
+
+#### Seleccion de variables con stepwise
+
+modelo_step <- stepAIC(modelo, direction = "both")
+
+#### AIC modelo stepwise
+AIC_step<-AIC(modelo_step)
+
+#### predicciones modelo stepwise
+pred_step<-predict(modelo_step, datos_entrenamiento.test, se.fit=TRUE)
+RMSE_step<-sqrt(mean((pred_step$fit-datos_entrenamiento.test$Feelslike_C)^2))
+
+#### Comparacion de los modelos
+AIC_comparacion <- data.frame(Modelo = c("Modelo Inicial", "Modelo Stepwise"),
+                         AIC = c(AIC, AIC_step),
+                         RMSE = c(RMSE, RMSE_step))
+AIC_comparacion
+#### 
