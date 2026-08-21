@@ -13,6 +13,7 @@ library(lmtest)
 library(MASS)
 library(leaps)
 library(readxl)
+library(car)
 #-----------------------------------------------------------------------------------------------------------------
 ## Importacion y preparacion de los datos de datos 
 #-----------------------------------------------------------------------------------------------------------------
@@ -27,6 +28,7 @@ names(datos_completos) <- hojas
 
 datos_entrenamiento <- datos_completos[["base"]]
 datos_predecir <- datos_completos[["predecir"]]
+idf<-datos_completos[["predecir"]]
 datos_entrenamiento <- as.data.frame(datos_entrenamiento)
 datos_predecir <- as.data.frame(datos_predecir)
 str(datos_entrenamiento)
@@ -104,4 +106,54 @@ AIC_comparacion <- data.frame(Modelo = c("Modelo Inicial", "Modelo Stepwise"),
                          AIC = c(AIC, AIC_step),
                          RMSE = c(RMSE, RMSE_step))
 AIC_comparacion
-#### 
+#### evaluar posibles transformaciones de las variables para mejorar el modelo
+graficos <- function(X,y){
+  plot(X, y)
+}
+
+##### graficos de cada una de las variables
+##### Feelslike_C - Wind_kph
+graficos(datos_entrenamiento$Wind_kph,datos_entrenamiento$Feelslike_C)
+##### Feelslike_ - wind_degree 
+graficos(datos_entrenamiento$Wind_degree,datos_entrenamiento$Feelslike_C)
+##### 
+graficos(datos_entrenamiento$Humidity,datos_entrenamiento$Feelslike_C)
+#####
+graficos(datos_entrenamiento$Cloud,datos_entrenamiento$Feelslike_C)
+#####
+graficos(datos_entrenamiento$UV,datos_entrenamiento$Feelslike_C)
+#####
+graficos(datos_entrenamiento$Precip_mm,datos_entrenamiento$Feelslike_C)
+#####
+graficos(datos_entrenamiento$Pressure_mb,datos_entrenamiento$Feelslike_C)
+#####
+graficos(datos_entrenamiento$Visibility_km,datos_entrenamiento$Feelslike_C)
+#####
+graficos(datos_entrenamiento$Gust_kph,datos_entrenamiento$Feelslike_C)
+#####
+graficos(datos_entrenamiento$Max_Wind_kph,datos_entrenamiento$Feelslike_C)
+#####
+graficos(datos_entrenamiento$Total_Precip_mm,datos_entrenamiento$Feelslike_C)
+
+##### grafico de residuos
+plot(modelo_step)
+##### test bormalidad de residuos
+shapiro.test(residuals(modelo_step))
+####### aparentemente no hay ninguna transformacion para realizar en la variable objetivo
+boxcox(modelo_step) 
+
+crPlots(modelo_step)
+
+##### por el momento dejamos los predichos del model step
+predichos <- predict(modelo_step, newdata= datos_predecir)
+predichos 
+predicion <- data.frame(Modelo = c("id", "Feelslike_C"),
+                         id = idf$id,
+                         Feelslike_C = predichos)
+predicion
+install.packages("openxlsx")
+
+library(openxlsx)
+
+# Exportar a Excel
+write.xlsx(predicion, "SergioAlejadroAmayaPaez.xlsx", rowNames = FALSE)
